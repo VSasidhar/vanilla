@@ -18,6 +18,7 @@ public class DriverFactory {
     private static Config config = EnvFactory.getInstance().getConfig();
     private static final Host HOST = Host.parse(config.getString("HOST"));
     private static final Browser BROWSER = Browser.parse(config.getString("BROWSER"));
+//    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DriverFactory.class);
 
     private DriverFactory() {
         throw new IllegalStateException("Static factory class");
