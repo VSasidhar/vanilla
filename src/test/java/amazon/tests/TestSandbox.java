@@ -1,3 +1,6 @@
+package amazon.tests;
+import org.testng.annotations.Test;
+import org.testng.annotations.Test;
 import amazon.config.EnvFactory;
 import amazon.factories.DriverFactory;
 import amazon.pagefactory.PageFactory;
@@ -27,7 +30,7 @@ public class TestSandbox {
     }
     
     @Test
-    void assertThatHomePageTitleIsCorrect() {
+    void verifyAbhoutThisItemSecation() {
     	
     	pageFactory.getHomePageObject()
     	.navigateToHomePage(HOME_PAGE_URL)
