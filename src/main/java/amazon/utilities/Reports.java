@@ -12,12 +12,7 @@ public class Reports {
 	public static ExtentTest test;
 	public static ExtentReports report;
 
-	@BeforeClass
-	public static void startReport()
-	{
-		report = new ExtentReports(System.getProperty("user.dir")+"ExtentReportResults.html");
-		test = report.startTest("ExtentDemo");
-	}
+	
 	
 	
 	public static void log(String status, String Description ) {
@@ -48,13 +43,7 @@ public class Reports {
 		
 	}
 	
-	@AfterClass
 	
-	public static void closeReports() {
-		report.endTest(test);
-		report.flush();
-		
-	}
 	
 	
 	

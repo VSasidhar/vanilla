@@ -42,6 +42,7 @@ public class AmazonHomePage {
 	}
 	
 	public AmazonHomePage filterByDepartmentAndProductType(String sortByDepartment, String productType) {
+		actions.waitForWebElementToBeVisible(MenuOption_TV_Appliances.ReplaceLocator(sortByDepartment));
 		actions.Click(MenuOption_TV_Appliances.ReplaceLocator(sortByDepartment));
 		actions.Click(MenuOption_Products.ReplaceLocator(productType));
 		return this;
@@ -49,6 +50,7 @@ public class AmazonHomePage {
 	
 	public AmazonHomePage narrowDownFilterwithBrand(String brnadName) {
 		
+		actions.Waitforpageload();
 		actions.Click(Filter_CheckBoxOption.ReplaceLocator(brnadName));
 		
 		return this;
@@ -56,7 +58,7 @@ public class AmazonHomePage {
 	
 	public AmazonHomePage sortByfilter(String sortByOption) {
 		
-		actions.SelectByVisibleText(Sortby_Dropdown, sortByOption);
+		actions.selectByVisibleText(Sortby_Dropdown, sortByOption);
 		
 		return this;
 	}
@@ -71,8 +73,6 @@ public class AmazonHomePage {
 	
 	public AmazonHomePage navigateToHomePage(String url) {
 		actions.OpenURl(url);
-		
-		
 		return this;
 		
 	}

@@ -68,7 +68,7 @@ public class Actions {
 
 	public Actions Click(ObjectLocator locator) {
 
-		FindElement(locator).click();
+		findElement(locator).click();
 		if (this.locatorDescription.isEmpty()) {
 			this.locatorDescription = locator.locatorDescription;
 		}
@@ -79,7 +79,7 @@ public class Actions {
 
 	public Actions verifyElementPresent(ObjectLocator locator) {
 
-		if (IsElementPresent(locator)) {
+		if (isElementPresent(locator)) {
 			Reports.log("info", locator.locatorDescription+" is Present");
 
 		} else {
@@ -88,9 +88,9 @@ public class Actions {
 		return this;
 	}
 
-	public boolean IsElementPresent(ObjectLocator locator) {
+	public boolean isElementPresent(ObjectLocator locator) {
 
-		WebElement checkElement = FindElement(locator);
+		WebElement checkElement = findElement(locator);
 
 		if (checkElement != null) {
 			if (checkElement.isDisplayed()) {
@@ -115,18 +115,31 @@ public class Actions {
 
 	}
 
-	public Actions WaitForWebElement(ObjectLocator locator) {
-
-		element = (new WebDriverWait(driver, Duration.ofSeconds(60, 1))
-				.until(ExpectedConditions.elementToBeClickable(locator.Locator)));
+	public Actions waitForWebElementToBeClickable(ObjectLocator locator) {
+		try {
+			element = (new WebDriverWait(driver, Duration.ofSeconds(max_LoadTime, 1))
+					.until(ExpectedConditions.elementToBeClickable(locator.Locator)));
+		}catch(Exception e) {
+			Reports.log("FAIL", " wait for webElement failed with error "+e.getMessage());
+		}
+		return this;
+	}
+	
+	public Actions waitForWebElementToBeVisible(ObjectLocator locator) {
+		try {
+			element = (new WebDriverWait(driver, Duration.ofSeconds(max_LoadTime, 1))
+					.until(ExpectedConditions.visibilityOfElementLocated(locator.Locator)));
+		}catch(Exception e) {
+			Reports.log("FAIL", " wait for webElement failed with error "+e.getMessage());
+		}
 		return this;
 	}
 
-	public WebElement FindElement(ObjectLocator locator) {
+	public WebElement findElement(ObjectLocator locator) {
 
 		WebElement retElement = null;
 
-		WaitForWebElement(locator);
+		waitForWebElementToBeVisible(locator);
 
 		try {
 
@@ -140,7 +153,7 @@ public class Actions {
 			retElement = driver.findElement(locator.Locator);
 		} catch (ElementNotVisibleException ex) {
 			// Handle exception if the element is not found
-			Reports.log("fail","ElementNotVisibleException: The Object " + locator.locatorDescription + " not found! ");
+			Reports.log("fail","ElementNotVisibleException: The Object " + locator.locatorDescription + " not found! "+ex.getMessage());
 		} catch (WebDriverException ex) {
 			// Handle exception if the element is not found
 			Reports.log("fail","NoSuchElementException: The Object " + locator.locatorDescription + " not found! "
@@ -149,31 +162,31 @@ public class Actions {
 		return retElement;
 	}
 
-	public List<WebElement> GetAllElements(ObjectLocator locator) {
+	public List<WebElement> getAllElements(ObjectLocator locator) {
 
 		List<WebElement> elements = driver.findElements(locator.Locator);
 		return elements;
 
 	}
 
-	public Actions SelectByVisibleText(ObjectLocator locator, String selecttext) {
+	public Actions selectByVisibleText(ObjectLocator locator, String selecttext) {
 
-		Select cmbSelect = new Select(FindElement(locator));
+		Select cmbSelect = new Select(findElement(locator));
 		cmbSelect.selectByVisibleText(selecttext);
 		return this;
 	}
 
-	public String GetAttribute(ObjectLocator locator) {
+	public String getAttribute(ObjectLocator locator) {
 		String value = null;
 
-		value = FindElement(locator).getAttribute("value");
+		value = findElement(locator).getAttribute("value");
 
 		return value;
 	}
 
 	public String getSelectedValueFromDropDown(ObjectLocator locator) {
 
-		Select cmbSelect = new Select(FindElement(locator));
+		Select cmbSelect = new Select(findElement(locator));
 		String selectedText = cmbSelect.getFirstSelectedOption().getText();
 		return selectedText;
 
@@ -181,12 +194,12 @@ public class Actions {
 
 	public String getText(ObjectLocator locator) {
 
-		String tagName = FindElement(locator).getTagName();
+		String tagName = findElement(locator).getTagName();
 		String value = null;
 
 		if (tagName.toLowerCase().equals("input")) {
 
-			value = GetAttribute(locator);
+			value = getAttribute(locator);
 		}
 
 		else if (tagName.toLowerCase().equals("select")) {
@@ -194,7 +207,7 @@ public class Actions {
 			value = getSelectedValueFromDropDown(locator);
 		} else {
 
-			value = FindElement(locator).getText();
+			value = findElement(locator).getText();
 		}
 
 		return value;
@@ -212,10 +225,10 @@ public class Actions {
 	public void switchtoChildWindow() {
 		
 		String mainWindow = driver.getWindowHandle();
-		
 		Set<String> handles = getAllWindowHandles();
 		
 		Iterator<String> iterator = handles.iterator();
+		
 		while(iterator.hasNext()) {
 			
 			String childWindow = iterator.next();
@@ -227,14 +240,6 @@ public class Actions {
 	
 	}
 	
-
-	public static String capture(WebDriver driver) throws IOException {
-		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-		File Dest = new File("src/../ScreenShots/" + System.currentTimeMillis()
-		+ ".png");
-		String errflpath = Dest.getAbsolutePath();
-		FileUtils.copyFile(scrFile, Dest);
-		return errflpath;
-		}
+	
 
 }

@@ -1,33 +1,22 @@
 package amazon.tests;
 import org.testng.annotations.Test;
-import org.testng.annotations.Test;
 import amazon.config.EnvFactory;
-import amazon.factories.DriverFactory;
 import amazon.pagefactory.PageFactory;
-import amazon.utilities.Reports;
-
-import org.testng.ITestResult;
-import org.testng.annotations.*;
+import amazon.utilities.TestSetUp;
 
 import com.typesafe.config.Config;
 
 
-public class TestSandbox extends Reports{
+public class TestSandbox extends TestSetUp{
     private static Config config = EnvFactory.getInstance().getConfig();
     private static final String HOME_PAGE_URL = config.getString("HOME_PAGE_URL");
     
     PageFactory pageFactory = new PageFactory();
 	
     
-    @BeforeTest
+   
     
-    public void initialise() {
-    	
-    	DriverFactory.initializeDriver();
-    	
-    }
-    
-    @Test
+    @Test(description = "Verify About this Item sections and print Details")
     void verifyAbhoutThisItemSecation() {
     	
     	pageFactory.getHomePageObject()
@@ -43,26 +32,9 @@ public class TestSandbox extends Reports{
     	.printAboutThisSectionsText();
     	
     }
+  
     
-    @AfterMethod
-    public void testResult(ITestResult testResult) {
-    	
-    	if(testResult.getStatus()==2) {
-    		Reports.log("fail", testResult.getName()+" Failed ");
-    	}else if(testResult.getStatus()==1) {
-    		Reports.log("pass", testResult.getName()+" passed ");
-    	}
-    	
-    }
-    
-    @AfterTest
-    
-    public void cleanUp() {
-    	
-    	DriverFactory.closeDriver();
-    	DriverFactory.quitDriver();
-    	
-    }
+   
     
 
 }
