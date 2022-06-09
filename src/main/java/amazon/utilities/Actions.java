@@ -1,15 +1,20 @@
 package amazon.utilities;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.logging.log4j.core.util.Assert;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
@@ -47,7 +52,17 @@ public class Actions {
 	}
 
 	public Actions OpenURl(String URL) {
-		driver.navigate().to(URL);
+		try {
+			driver.navigate().to(URL);
+			
+			Reports.log("INFO", "Navigated to URL : "+URL);
+			
+		}
+		
+		catch(Exception e) {
+			
+		}
+		
 		return this;
 	}
 
@@ -57,7 +72,7 @@ public class Actions {
 		if (this.locatorDescription.isEmpty()) {
 			this.locatorDescription = locator.locatorDescription;
 		}
-		ActionLog("Clicked on " + this.locatorDescription);
+		Reports.log("info","Clicked on " + this.locatorDescription);
 		this.locatorDescription = "";
 		return this;
 	}
@@ -65,10 +80,10 @@ public class Actions {
 	public Actions verifyElementPresent(ObjectLocator locator) {
 
 		if (IsElementPresent(locator)) {
-			ActionLog(locator.locatorDescription + " found successfully");
+			Reports.log("info", locator.locatorDescription+" is Present");
 
 		} else {
-			AssertFail(locator.locatorDescription + "Element not present on the page");
+			Reports.log("fail",locator.locatorDescription + "Element not present on the page with Locator "+locator.locatorValue);
 		}
 		return this;
 	}
@@ -79,10 +94,10 @@ public class Actions {
 
 		if (checkElement != null) {
 			if (checkElement.isDisplayed()) {
-				ActionLog(locator.locatorDescription + "element present");
+				Reports.log("info", locator.locatorDescription+" is Present");
 				return true;
 			} else {
-				ActionLog(locator.locatorDescription + "element not present");
+				Reports.log("info", locator.locatorDescription+" is not Present");
 				return false;
 
 			}
@@ -118,17 +133,17 @@ public class Actions {
 			retElement = driver.findElement(locator.Locator);
 		} catch (org.openqa.selenium.NoSuchElementException ex) {
 			// Handle exception if the element is not found
-			ActionLog("NoSuchElementException: The Object " + locator.locatorDescription + " not found! "
+			Reports.log("fail","NoSuchElementException: The Object " + locator.locatorDescription + " not found! "
 					+ ex.getMessage());
 		} catch (org.openqa.selenium.StaleElementReferenceException ex) {
 			Waitforpageload();
 			retElement = driver.findElement(locator.Locator);
 		} catch (ElementNotVisibleException ex) {
 			// Handle exception if the element is not found
-			ActionLog("ElementNotVisibleException: The Object " + locator.locatorDescription + " not found! ");
+			Reports.log("fail","ElementNotVisibleException: The Object " + locator.locatorDescription + " not found! ");
 		} catch (WebDriverException ex) {
 			// Handle exception if the element is not found
-			ActionLog("NoSuchElementException: The Object " + locator.locatorDescription + " not found! "
+			Reports.log("fail","NoSuchElementException: The Object " + locator.locatorDescription + " not found! "
 					+ ex.getMessage());
 		}
 		return retElement;
@@ -185,20 +200,7 @@ public class Actions {
 		return value;
 	}
 
-	public Actions ActionLog(String message) {
-		log.info(message);
-		LOGGER.info(message);
-		return this;
-	}
-
-	public void AssertFail(String message) {
-
-		// Assert.assertEquals("", message,message);
-
-		ActionLog("[FAILURE] " + message);
-//		softAssert.fail(message);
-
-	}
+	
 	
 	public Set<String> getAllWindowHandles() {
 		
@@ -224,5 +226,15 @@ public class Actions {
 		}
 	
 	}
+	
+
+	public static String capture(WebDriver driver) throws IOException {
+		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+		File Dest = new File("src/../ScreenShots/" + System.currentTimeMillis()
+		+ ".png");
+		String errflpath = Dest.getAbsolutePath();
+		FileUtils.copyFile(scrFile, Dest);
+		return errflpath;
+		}
 
 }

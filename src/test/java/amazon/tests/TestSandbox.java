@@ -4,22 +4,20 @@ import org.testng.annotations.Test;
 import amazon.config.EnvFactory;
 import amazon.factories.DriverFactory;
 import amazon.pagefactory.PageFactory;
+import amazon.utilities.Reports;
 
+import org.testng.ITestResult;
 import org.testng.annotations.*;
 
 import com.typesafe.config.Config;
 
 
-public class TestSandbox {
+public class TestSandbox extends Reports{
     private static Config config = EnvFactory.getInstance().getConfig();
     private static final String HOME_PAGE_URL = config.getString("HOME_PAGE_URL");
     
     PageFactory pageFactory = new PageFactory();
 	
-
-//    @Tag("smokeTest")
-//    @DisplayName("This test is for demo purpose only to show that the basic code works." +
-//            "You have to use the best practices that you normally use to design your tests")
     
     @BeforeTest
     
@@ -46,6 +44,17 @@ public class TestSandbox {
     	
     }
     
+    @AfterMethod
+    public void testResult(ITestResult testResult) {
+    	
+    	if(testResult.getStatus()==2) {
+    		Reports.log("fail", testResult.getName()+" Failed ");
+    	}else if(testResult.getStatus()==1) {
+    		Reports.log("pass", testResult.getName()+" passed ");
+    	}
+    	
+    }
+    
     @AfterTest
     
     public void cleanUp() {
@@ -54,4 +63,6 @@ public class TestSandbox {
     	DriverFactory.quitDriver();
     	
     }
+    
+
 }

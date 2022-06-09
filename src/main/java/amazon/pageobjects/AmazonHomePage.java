@@ -71,6 +71,8 @@ public class AmazonHomePage {
 	
 	public AmazonHomePage navigateToHomePage(String url) {
 		actions.OpenURl(url);
+		
+		
 		return this;
 		
 	}

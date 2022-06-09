@@ -67,8 +67,11 @@ public  ObjectLocator ReplaceLocator(String ReplaceString)
 	
 	{
 	  this.locatorValue =locatorValue.replace("$", ReplaceString);
+	  this.locatorDescription = locatorDescription.concat(" :: "+ReplaceString);
 	  
 	  this.Locator=GetObjectLocator(locatorType,this.locatorValue);
+	  
+	  Reports.log("INFO", this.locatorValue);
 	
 	  return this;
 		

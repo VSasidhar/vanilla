@@ -4,6 +4,7 @@ package amazon.pageobjects;
 import amazon.pagefactory.PageFactory;
 import amazon.utilities.Actions;
 import amazon.utilities.ObjectLocator;
+import amazon.utilities.Reports;
 
 public class AmazonProductDetailsPage {
 	
@@ -20,9 +21,9 @@ public class AmazonProductDetailsPage {
 		
 		if(actions.IsElementPresent(AboutThisItem_SectionHeading)) {
 			
-			actions.ActionLog("About This Item Section is  Present");
+			Reports.log("PASS", "About This Item Section is  Present");
 		}else {
-			actions.AssertFail("About This Item Section is not Present");
+			Reports.log("FAIL", "About This Item Section is not Present");
 		}
 		return pageFactory.amazonProductDetailsPageObject();
 	}
@@ -33,7 +34,7 @@ public class AmazonProductDetailsPage {
 		
 		if(actions.IsElementPresent(AboutThisItem_SectionHeading)) {
 			
-			actions.ActionLog(actions.getText(AboutthisItem_Details));
+			Reports.log("INFO", actions.getText(AboutthisItem_Details));
 		}
 		return pageFactory.amazonProductDetailsPageObject();
 		
