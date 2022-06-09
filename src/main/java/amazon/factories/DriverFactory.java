@@ -6,6 +6,10 @@ import com.typesafe.config.Config;
 import amazon.config.EnvFactory;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.extern.slf4j.Slf4j;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -26,7 +30,7 @@ public class DriverFactory {
 	}
 	
 	
-	public static WebDriver initializeDriver() {
+	public static WebDriver initializeDriver() throws MalformedURLException {
 		log.info("Getting driver for host: {}", HOST);
 		switch (HOST) {
 		case LOCALHOST:
@@ -68,11 +72,12 @@ public class DriverFactory {
 	/**
 	 * Chrome, firefox and edge; are the only 3 options available under
 	 * docker.selenium.grid
+	 * @throws MalformedURLException 
 	 */
-	private static WebDriver getRemoteWebDriver() {
+	private static WebDriver getRemoteWebDriver() throws MalformedURLException {
 		switch (BROWSER) {
 		case CHROME:
-			// fall - through. Same method for all browsers.
+			return new RemoteWebDriver(URLFactory.getHostURL(HOST), CapabilitiesFactory.getCapabilities(BROWSER));
 		case FIREFOX:
 			// fall - through. Same method for all browsers.
 		case EDGE:
