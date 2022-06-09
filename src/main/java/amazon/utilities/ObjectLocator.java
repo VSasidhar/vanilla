@@ -25,26 +25,26 @@ public class ObjectLocator {
     public By GetObjectLocator(String locatorType, String locatorValue)
     {
     	
-    switch(locatorType){
-	case("linkText"):
+    switch(locatorType.toLowerCase()){
+	case("linktext"):
 		Locator= By.linkText(locatorValue);	
 		break;
-	case("partiallinkText"):
+	case("partiallinktext"):
 		Locator= By.partialLinkText(locatorValue);	
 		break;
-	case("ID"):
+	case("id"):
 		Locator= By.id(locatorValue);
 	break;
-	case("CSS"):
+	case("css"):
 		Locator = By.cssSelector(locatorValue);
 	break;
-	case("Name"):
+	case("name"):
 		Locator = By.name(locatorValue);
 	break;
-	case("Xpath"):
+	case("xpath"):
 		Locator = By.xpath(locatorValue);
 	break;
-	case("TagName"):
+	case("tagname"):
 		Locator = By.tagName(locatorValue);
 	break;
 	} 
@@ -57,7 +57,7 @@ public class ObjectLocator {
 	{
 	     this.locatorType=LocatorType;
 	     this.locatorValue=LocatorValue;
-		Locator=GetObjectLocator(LocatorType,LocatorValue);
+		this.Locator=GetObjectLocator(LocatorType,LocatorValue);
 		this.locatorDescription=LocatorDescription;
 
 	}
@@ -66,9 +66,9 @@ public class ObjectLocator {
 public  ObjectLocator ReplaceLocator(String ReplaceString)
 	
 	{
-	  String Temp=locatorValue.replace("$", ReplaceString);
+	  this.locatorValue =locatorValue.replace("$", ReplaceString);
 	  
-	  Locator=GetObjectLocator(locatorType,Temp);
+	  this.Locator=GetObjectLocator(locatorType,this.locatorValue);
 	
 	  return this;
 		

@@ -1,10 +1,13 @@
 package amazon.utilities;
 
 import java.time.Duration;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
+import org.apache.logging.log4j.core.util.Assert;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -12,9 +15,9 @@ import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
+
 
 import com.typesafe.config.Config;
 
@@ -27,13 +30,12 @@ public class Actions {
 
 	private WebDriver driver;
 	public WebElement element;
-	public String locatorDescription="";
-	public static SoftAssert softAssert=new SoftAssert();
+	public String locatorDescription = "";
 	private static Config config = EnvFactory.getInstance().getConfig();
 	private static int max_LoadTime = Integer.parseInt(config.getString("MAX_WAIT"));
-	 private static Logger LOGGER = Logger.getLogger("InfoLogging");
-	
-	
+	private static Logger LOGGER = Logger.getLogger("InfoLogging");
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Actions.class);
+
 //    private static final String HOME_PAGE_URL = config.getString("HOME_PAGE_URL");
 
 	public Actions() {
@@ -48,8 +50,7 @@ public class Actions {
 		driver.navigate().to(URL);
 		return this;
 	}
-	
-	
+
 	public Actions Click(ObjectLocator locator) {
 
 		FindElement(locator).click();
@@ -90,23 +91,21 @@ public class Actions {
 		}
 
 	}
-	
-	
-	public Actions Waitforpageload()  {
-		new WebDriverWait(driver, Duration.ofSeconds(max_LoadTime)).until((ExpectedCondition<Boolean>) wd ->
-        ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete"));		
+
+	public Actions Waitforpageload() {
+		new WebDriverWait(driver, Duration.ofSeconds(max_LoadTime))
+				.until((ExpectedCondition<Boolean>) wd -> ((JavascriptExecutor) wd)
+						.executeScript("return document.readyState").equals("complete"));
 		return this;
 
 	}
-	
-	
+
 	public Actions WaitForWebElement(ObjectLocator locator) {
-		
 
-
-		element = ( new WebDriverWait( driver , Duration.ofSeconds(60, 1)).until(ExpectedConditions.elementToBeClickable(locator.Locator)));
-        return this;
-    }
+		element = (new WebDriverWait(driver, Duration.ofSeconds(60, 1))
+				.until(ExpectedConditions.elementToBeClickable(locator.Locator)));
+		return this;
+	}
 
 	public WebElement FindElement(ObjectLocator locator) {
 
@@ -141,20 +140,89 @@ public class Actions {
 		return elements;
 
 	}
-	
-	
+
+	public Actions SelectByVisibleText(ObjectLocator locator, String selecttext) {
+
+		Select cmbSelect = new Select(FindElement(locator));
+		cmbSelect.selectByVisibleText(selecttext);
+		return this;
+	}
+
+	public String GetAttribute(ObjectLocator locator) {
+		String value = null;
+
+		value = FindElement(locator).getAttribute("value");
+
+		return value;
+	}
+
+	public String getSelectedValueFromDropDown(ObjectLocator locator) {
+
+		Select cmbSelect = new Select(FindElement(locator));
+		String selectedText = cmbSelect.getFirstSelectedOption().getText();
+		return selectedText;
+
+	}
+
+	public String getText(ObjectLocator locator) {
+
+		String tagName = FindElement(locator).getTagName();
+		String value = null;
+
+		if (tagName.toLowerCase().equals("input")) {
+
+			value = GetAttribute(locator);
+		}
+
+		else if (tagName.toLowerCase().equals("select")) {
+
+			value = getSelectedValueFromDropDown(locator);
+		} else {
+
+			value = FindElement(locator).getText();
+		}
+
+		return value;
+	}
+
 	public Actions ActionLog(String message) {
 		log.info(message);
 		LOGGER.info(message);
 		return this;
 	}
+
+	public void AssertFail(String message) {
+
+		// Assert.assertEquals("", message,message);
+
+		ActionLog("[FAILURE] " + message);
+//		softAssert.fail(message);
+
+	}
 	
-public void AssertFail(String message) {
+	public Set<String> getAllWindowHandles() {
 		
-		//Assert.assertEquals("", message,message);
-		ActionLog("[FAILURE] " +message);
-		softAssert.fail(message);		
+		return driver.getWindowHandles();
+	}
+	
+	
+	
+	public void switchtoChildWindow() {
 		
+		String mainWindow = driver.getWindowHandle();
+		
+		Set<String> handles = getAllWindowHandles();
+		
+		Iterator<String> iterator = handles.iterator();
+		while(iterator.hasNext()) {
+			
+			String childWindow = iterator.next();
+			if(!mainWindow.equalsIgnoreCase(childWindow)) {
+				driver.switchTo().window(childWindow);
+				break;
+			}
+		}
+	
 	}
 
 }

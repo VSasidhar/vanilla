@@ -1,28 +1,54 @@
 import amazon.config.EnvFactory;
 import amazon.factories.DriverFactory;
-import amazon.utilities.Actions;
+import amazon.pagefactory.PageFactory;
+
+import org.testng.annotations.*;
 
 import com.typesafe.config.Config;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.openqa.selenium.WebDriver;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestSandbox {
     private static Config config = EnvFactory.getInstance().getConfig();
     private static final String HOME_PAGE_URL = config.getString("HOME_PAGE_URL");
-    private WebDriver driver = DriverFactory.getDriver();
+    
+    PageFactory pageFactory = new PageFactory();
 	
-	Actions actions = new Actions();
 
-    @Tag("smokeTest")
-    @DisplayName("This test is for demo purpose only to show that the basic code works." +
-            "You have to use the best practices that you normally use to design your tests")
+//    @Tag("smokeTest")
+//    @DisplayName("This test is for demo purpose only to show that the basic code works." +
+//            "You have to use the best practices that you normally use to design your tests")
+    
+    @BeforeTest
+    
+    public void initialise() {
+    	
+    	DriverFactory.initializeDriver();
+    	
+    }
+    
     @Test
     void assertThatHomePageTitleIsCorrect() {
-    	actions.OpenURl(HOME_PAGE_URL);
-        assertEquals("Amazon.com. Spend less. Smile more.", driver.getTitle());
+    	
+    	pageFactory.getHomePageObject()
+    	.navigateToHomePage(HOME_PAGE_URL)
+    	.clickonHamBurger()
+    	.filterByDepartmentAndProductType("TV, Appliances, Electronics", "Televisions")
+    	.narrowDownFilterwithBrand("Samsung")
+    	.sortByfilter("Price: High to Low")
+    	.selectnthHighestCostItem("2");
+    	
+    	pageFactory.amazonProductDetailsPageObject()
+    	.switchToProductDetailsPage()
+    	.printAboutThisSectionsText();
+    	
+    }
+    
+    @AfterTest
+    
+    public void cleanUp() {
+    	
+    	DriverFactory.closeDriver();
+    	DriverFactory.quitDriver();
+    	
     }
 }
