@@ -2,9 +2,7 @@ package amazon.pageobjects;
 
 
 import java.util.List;
-
 import org.openqa.selenium.WebElement;
-
 import amazon.pagefactory.PageFactory;
 import amazon.utilities.Actions;
 import amazon.utilities.ObjectLocator;
@@ -21,17 +19,21 @@ public class AmazonProductDetailsPage {
 	PageFactory pageFactory = new PageFactory();
 	
 	
+	/**
+	 *  Verify About this Item
+	 * @return
+	 */
 	public AmazonProductDetailsPage verifyisAboutThisItemSection() {
 		
-		if(actions.isElementPresent(AboutThisItem_SectionHeading)) {
-			
-			Reports.log("PASS", "About This Item Section is  Present");
-		}else {
-			Reports.log("FAIL", "About This Item Section is not Present");
-		}
+		Reports.assertEquals(true, actions.isElementPresent(AboutThisItem_SectionHeading), AboutThisItem_SectionHeading.locatorDescription.toString());
 		return this;
 	}
 	
+	
+	/**
+	 *  to print the about this item details list
+	 * @return
+	 */
 	public AmazonProductDetailsPage printAboutThisSectionsText() {
 		
 		verifyisAboutThisItemSection();
@@ -52,6 +54,11 @@ public class AmazonProductDetailsPage {
 		return this;
 		
 	}
+	
+	/**
+	 *  method to switch to product details page
+	 * @return
+	 */
 	
 	public AmazonProductDetailsPage switchToProductDetailsPage() {
 		

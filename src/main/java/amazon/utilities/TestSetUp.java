@@ -18,8 +18,13 @@ import com.relevantcodes.extentreports.ExtentReports;
 import amazon.factories.DriverFactory;
 
 public class TestSetUp {
+	
+	/**
+	 * This method  runs once before  execution of the @Test methods
+	 * @throws MalformedURLException
+	 */
 
-	@BeforeTest
+	@BeforeTest (alwaysRun= true)
 
 	public void initialise() throws MalformedURLException {
 
@@ -27,14 +32,23 @@ public class TestSetUp {
 
 	}
 
-	@BeforeMethod
+	/**
+	 * This method runs before each @test method
+	 * @param method
+	 */
+	@BeforeMethod (alwaysRun= true)
 	public void startreport(Method method) {
 
-		Reports.test = Reports.report.startTest(method.getAnnotation(Test.class).description());
+		Reports.logger = Reports.report.startTest(method.getAnnotation(Test.class).description());
 
 	}
 
-	@AfterMethod
+	/**
+	 * This method runs after each @test method and add screen shots to failed test cases
+	 * @param testResult
+	 * @throws IOException
+	 */
+	@AfterMethod (alwaysRun= true)
 	public void testResult(ITestResult testResult) throws IOException {
 
 		if (testResult.getStatus() == 1) {
@@ -42,13 +56,19 @@ public class TestSetUp {
 		}
 
 		else if (testResult.getStatus() == 2) {
-			Reports.log("fail", capture(DriverFactory.getDriver()));
+			Reports.log("fail", Reports.logger.addScreenCapture(capture(DriverFactory.getDriver())).concat(testResult.getName()+" Failed"));
 		}
 
-		Reports.report.endTest(Reports.test);
+		Reports.report.endTest(Reports.logger);
 
 	}
 
+	/**
+	 * Method to capture screen 
+	 * @param driver
+	 * @return
+	 * @throws IOException
+	 */
 	public static String capture(WebDriver driver) throws IOException {
 		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 		File Dest = new File("src/../ScreenShots/" + System.currentTimeMillis() + ".png");
@@ -57,13 +77,21 @@ public class TestSetUp {
 		return errflpath;
 	}
 
-	@BeforeClass
+	/**
+	 * This method to 
+	 * @param itestContext
+	 */
+	
+	@BeforeClass (alwaysRun= true)
 	public static void startReport(ITestContext itestContext) {
-		Reports.report = new ExtentReports(System.getProperty("user.dir")+"/.." + "ExtentReportResults.html");
+		Reports.report = new ExtentReports(System.getProperty("user.dir")+"/ExtentReports/" + "ExtentReportResults.html");
 
 	}
 
-	@AfterClass
+	/**
+	 * method to clean close extent reports and Chrome driver
+	 */
+	@AfterClass (alwaysRun= true)
 	public void cleanUp() {
 
 		DriverFactory.closeDriver();

@@ -17,45 +17,61 @@ public class AmazonHomePage {
 	
 	//Samsung
 	public static ObjectLocator Filter_CheckBoxOption = new ObjectLocator("XPATH", "//span[normalize-space(.)='$']/preceding-sibling::div//i[@class='a-icon a-icon-checkbox']",
-			"Xpath for filter - check box"); 
+			"Xpath for filter - check box "); 
 	
 	public static ObjectLocator Sortby_Dropdown = new ObjectLocator("ID", "s-result-sort-select",
-			"Xpath for filter - check box");
+			"ID of the Sort By DropDown  in Product List");
 	
-	public static ObjectLocator nth_highestCostItem = new ObjectLocator("XPATH", "((//*[@data-component-type='s-search-result'])[$]//a)[1]",
+	public static ObjectLocator nth_highestCostItem = new ObjectLocator("XPATH", "((//div[@data-component-type='s-search-result'])[$]//a)[1]",
 			"Xpath for second highest Cost Item");
 	
 	
 	
 	Actions actions = new Actions();
 	
-	
-	
-	public AmazonHomePage() {
-		
-	}
+	/**
+	 *  Click on Home burger Menu
+	 * @return
+	 */
 	
 	public AmazonHomePage clickonHamBurger() {
-		actions.Click(HamBurgerIcon);
+		actions.click(HamBurgerIcon);
 
 		return this;
 	}
 	
+	/**
+	 *  Method to click on 
+	 * @param sortByDepartment
+	 * @param productType
+	 * @return
+	 */
+	
 	public AmazonHomePage filterByDepartmentAndProductType(String sortByDepartment, String productType) {
-		actions.waitForWebElementToBeVisible(MenuOption_TV_Appliances.ReplaceLocator(sortByDepartment));
-		actions.Click(MenuOption_TV_Appliances.ReplaceLocator(sortByDepartment));
-		actions.Click(MenuOption_Products.ReplaceLocator(productType));
+		actions.click(MenuOption_TV_Appliances.replaceLocator(sortByDepartment));
+		actions.click(MenuOption_Products.replaceLocator(productType));
 		return this;
 	}
+	
+	/**
+	 *  filter the check box - brand
+	 * @param brnadName
+	 * @return
+	 */
 	
 	public AmazonHomePage narrowDownFilterwithBrand(String brnadName) {
 		
 		actions.Waitforpageload();
-		actions.Click(Filter_CheckBoxOption.ReplaceLocator(brnadName));
+		actions.click(Filter_CheckBoxOption.replaceLocator(brnadName));
 		
 		return this;
 	}
 	
+	/**
+	 *  Method to Sort By filter 
+	 * @param sortByOption
+	 * @return
+	 */
 	public AmazonHomePage sortByfilter(String sortByOption) {
 		
 		actions.selectByVisibleText(Sortby_Dropdown, sortByOption);
@@ -63,13 +79,25 @@ public class AmazonHomePage {
 		return this;
 	}
 	
+	
+	/**
+	 *  method to click on nth Highest element in the product list
+	 * @param nthHighestItem
+	 * @return
+	 */
 	public AmazonHomePage selectnthHighestCostItem(String nthHighestItem) {
 		
-		actions.Click(nth_highestCostItem.ReplaceLocator(nthHighestItem));
+		actions.click(nth_highestCostItem.replaceLocator(nthHighestItem));
 		
 		return this;
 		
 	}
+	
+	/**
+	 *  method to navigate to Home page url
+	 * @param url
+	 * @return
+	 */
 	
 	public AmazonHomePage navigateToHomePage(String url) {
 		actions.OpenURl(url);
