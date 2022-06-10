@@ -28,5 +28,3 @@ Tip: Do remember to update this readme file for anything else that you think nee
 ## Instructions to Execute
 
 [Link to Instructions to Execute Scripts](https://github.com/VSasidhar/vanilla/wiki)
-
-[click here for Instruction to Execute Scripts](./docs/Instructios to Execute.md)
