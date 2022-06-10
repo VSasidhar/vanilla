@@ -26,3 +26,5 @@ For easiest way to getting started, extract this project and open it from Intell
 Tip: Do remember to update this readme file for anything else that you think needs updating here!
 
 ## Success
+
+[Link to Instructions to Execute Scripts](https://github.com/VSasidhar/vanilla/wiki)
