@@ -11,6 +11,7 @@ import java.net.URL;
 @Slf4j
 public class URLFactory {
     private static Config config = EnvFactory.getInstance().getConfig();
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(URLFactory.class);
 
     private URLFactory() {
         throw new IllegalStateException("Static factory class");
