@@ -90,20 +90,8 @@ public class Actions {
 
 	public boolean isElementPresent(ObjectLocator locator) {
 
-		WebElement checkElement = findElement(locator);
-
-		if (checkElement != null) {
-			if (checkElement.isDisplayed()) {
-				Reports.log("info", locator.locatorDescription+" is Present");
-				return true;
-			} else {
-				Reports.log("info", locator.locatorDescription+" is not Present");
-				return false;
-
-			}
-		} else {
-			return false;
-		}
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(0));
+		return getAllElements(locator).size() != 0;
 
 	}
 

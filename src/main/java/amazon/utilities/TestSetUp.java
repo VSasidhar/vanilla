@@ -30,7 +30,7 @@ public class TestSetUp {
 	@BeforeMethod
 	public void startreport(Method method) {
 
-		Reports.test = Reports.report.startTest(method.getAnnotation(Test.class).description());
+		Reports.logger = Reports.report.startTest(method.getAnnotation(Test.class).description());
 
 	}
 
@@ -42,10 +42,13 @@ public class TestSetUp {
 		}
 
 		else if (testResult.getStatus() == 2) {
-			Reports.log("fail", capture(DriverFactory.getDriver()));
+			
+			Reports.logger.addScreenCapture(capture(DriverFactory.getDriver()));
+			
+			Reports.log("fail", testResult.getName()+ " Failed " );
 		}
 
-		Reports.report.endTest(Reports.test);
+		Reports.report.endTest(Reports.logger);
 
 	}
 
