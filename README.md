@@ -29,4 +29,4 @@ Tip: Do remember to update this readme file for anything else that you think nee
 
 [wiki - Link to Instructions to Execute](https://github.com/VSasidhar/vanilla/wiki)
 
-[Link to Instruction for Execution](/docs/Instructios-to-Execute)
+[Link to Instruction for Execution](/docs/Instructios-to-Execute.md)
